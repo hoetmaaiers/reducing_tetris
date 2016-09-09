@@ -3,6 +3,7 @@ import reactCSS from 'reactcss';
 import _ from 'lodash';
 
 import TetrisCell from './TetrisCell';
+import {getBlockCoords} from './../utils/block';
 
 const sx = reactCSS({
   default: {
@@ -26,25 +27,9 @@ const sx = reactCSS({
 });
 
 
-function getBlockCoords(block) {
-  const {x, y} = block;
-
-  const coords = block.pattern.map((row, i) => {
-    return row.
-      filter((rowItem, j) => {
-        return (rowItem === 1);
-      })
-      .map((rowItem, j) => {
-        return {x: x +j, y: y + i};
-      });
-  });
-
-  return _.flatten(coords);
-}
-
 class TetrisGrid extends Component {
 
-  isCurrent(row, col) {
+  isOccupied(row, col) {
     const {blocks} = this.props;
     const blockCoords = _.flatten(blocks.map((block) => {
       return getBlockCoords(block);
@@ -53,36 +38,41 @@ class TetrisGrid extends Component {
     return _.some(blockCoords, (coord) => {
       return coord.x === col && coord.y === row;
     })
-    return true;
+  }
+
+
+  isCurrent(row, col) {
+    const {blocks, currentBlock} = this.props;
+    const blockCoords = getBlockCoords(currentBlock);
+
+    return _.some(blockCoords, (coord) => {
+      return coord.x === col && coord.y === row;
+    })
   }
 
   render() {
     const {cols, rows} = this.props;
 
     return (
-      <div>
-        <h1>GRID</h1>
-        <div style={sx.gridHolder}>
+      <div style={sx.gridHolder}>
 
-          {_.times(rows, (row) => {
+        {_.times(rows, (row) => {
 
-            return (
-              <div key={`row${row}`} style={sx.row}>
+          return (
+            <div key={`row${row}`} style={sx.row}>
 
-                {_.times(cols, (col) => {
-                  return (
-                    <div key={col} style={sx.col}>
-                      <TetrisCell current={this.isCurrent(row, col)}/>
-                    </div>
-                  );
-                })}
+              {_.times(cols, (col) => {
+                return (
+                  <div key={col} style={sx.col}>
+                    <TetrisCell occupied={this.isOccupied(row, col)} current={this.isCurrent(row, col)}/>
+                  </div>
+                );
+              })}
 
-              </div>
+            </div>
 
-            );
-          })}
-
-        </div>
+          );
+        })}
 
       </div>
     );

@@ -6,15 +6,11 @@ import { moveBlock } from './../actions';
 
 class App extends Component {
   constructor(props) {
-    console.log('inside <App />');
     super(props);
-
-    this.state = {
-      step: 1
-    };
 
     window.addEventListener('keyup', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const keyLegend = {
         37: 'left',
         38: 'up',
@@ -22,29 +18,29 @@ class App extends Component {
         40: 'down',
       };
 
-      // const step = 1;
       const direction = keyLegend[e.keyCode];
 
-      this.props.dispatch(moveBlock(this.props.currentBlock, direction));
+      this.props.dispatch(moveBlock(this.props.blocks, this.props.currentBlock, direction));
     });
 
+    this.tick();
+  }
 
+  tick() {
+    setTimeout(() => {
+      console.log('move block down');
+      this.props.dispatch(moveBlock(this.props.blocks, this.props.currentBlock, 'down'));
+      this.tick();
+    }, 1000);
   }
 
   render() {
-    console.log(this.props);
-
     const {rows, cols, blocks} = this.props;
+    const currentBlock = _.find(blocks, {id: this.props.currentBlock})
 
     return (
       <div className="App">
-        <div className="App-header">
-          <h2>Tetris</h2>
-        </div>
-
-        <TetrisGrid rows={rows} cols={cols} blocks={blocks}>
-          {/*<Block step={this.state.step} left="5" top="4"></Block>*/}
-        </TetrisGrid>
+        <TetrisGrid rows={rows} cols={cols} blocks={blocks} currentBlock={currentBlock} />
       </div>
     );
   }

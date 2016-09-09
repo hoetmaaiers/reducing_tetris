@@ -11,6 +11,11 @@ const TetrisCell = (props) => {
         height: '100%',
       },
     },
+    occupied: {
+      cell: {
+        backgroundColor: 'lightgray',
+      },
+    },
     current: {
       cell: {
         backgroundColor: 'tomato',
