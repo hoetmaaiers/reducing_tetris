@@ -1,13 +1,14 @@
 import {combineReducers} from 'redux';
 
 import blocks from './blocks';
+import currentBlock from './current-block';
 
 
 const rootReducer = combineReducers({
   rows: () => 20,
   cols: () => 10,
   blocks,
-  currentBlock: (id) => id || 2,
+  currentBlock,
 })
 
 export default rootReducer;

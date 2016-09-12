@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-import './App.css';
 import TetrisGrid from './TetrisGrid';
-import {moveBlock, rotateBlock} from './../actions';
+import {addBlock, moveBlock, rotateBlock} from './../actions';
 
 class App extends Component {
   constructor(props) {
@@ -36,7 +35,8 @@ class App extends Component {
 
     });
 
-    // this.tick();
+    this.props.dispatch(addBlock());
+    this.tick();
   }
 
   tick() {

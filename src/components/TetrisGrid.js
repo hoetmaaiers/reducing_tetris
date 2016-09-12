@@ -43,6 +43,8 @@ class TetrisGrid extends Component {
 
   isCurrent(row, col) {
     const {blocks, currentBlock} = this.props;
+    if (_.isEmpty(currentBlock)) return false;
+
     const blockCoords = getBlockCoords(currentBlock);
 
     return _.some(blockCoords, (coord) => {
