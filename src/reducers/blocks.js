@@ -1,56 +1,43 @@
-import _ from 'lodash';
 import {fromJS, toJS, List, Map} from 'immutable';
-import {MOVE_BLOCK} from './../actions';
+import blockDefinitions from './../constants/blocks';
+import {MOVE_BLOCK, ROTATE_BLOCK} from './../actions';
 import {getBlockCoords, isBlockColliding} from './../utils/block';
 
 const initialState = [
   {
     id: 1,
-    pattern: [
-      [1, 0],
-      [1, 0],
-      [1, 1],
-    ],
+    type: 'A',
+    rotation: 0,
     x: 1,
     y: 1,
   },
   {
     id: 2,
-    pattern: [
-      [1, 1],
-      [1, 1],
-    ],
+    type: 'B',
+    rotation: 0,
     x: 3,
     y: 6,
   },
   {
     id: 3,
-    pattern: [
-      [0, 1, 0],
-      [1, 1, 1],
-    ],
+    type: 'D',
+    rotation: 0,
     x: 4,
     y: 0,
   },
   {
     id: 4,
-    pattern: [
-      [0, 1, 1],
-      [1, 1, 0],
-    ],
+    type: 'C',
+    rotation: 0,
     x: 5,
     y: 10,
   },
   {
     id: 5,
-    pattern: [
-      [1],
-      [1],
-      [1],
-      [1],
-    ],
-    x: 2,
-    y: 10,
+    type: 'E',
+    rotation: 0,
+    x: 0,
+    y: 12,
   },
 ]
 
@@ -77,6 +64,19 @@ export default function blocks(mutableState = initialState, action = {}) {
       }
       break;
 
+    case ROTATE_BLOCK:
+      const rotatingBlock = state.find((block) => block.get('id') === action.blockId);
+      const rotatedBlock = rotateBlock(rotatingBlock);
+
+      return state.map((block) => {
+        if (block.get('id') === rotatedBlock.get('id')) {
+          console.log(rotatedBlock.toJS());
+          return rotatedBlock;
+        } else {
+          return block;
+        }
+      }).toJS();
+
     default:
       return state.toJS();
   }
@@ -98,4 +98,10 @@ function moveBlock(block, direction) {
       break;
   }
 
+}
+
+function rotateBlock(block) {
+  const rotationLoops = blockDefinitions[block.get('type')].length;
+  const nextRotation = (block.get('rotation') + 1 >= rotationLoops) ? 0 : block.get('rotation') + 1;
+  return block.set('rotation', nextRotation);
 }

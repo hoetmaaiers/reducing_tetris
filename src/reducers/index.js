@@ -7,7 +7,7 @@ const rootReducer = combineReducers({
   rows: () => 20,
   cols: () => 10,
   blocks,
-  currentBlock: (id) => id || 3,
+  currentBlock: (id) => id || 5,
 })
 
 export default rootReducer;

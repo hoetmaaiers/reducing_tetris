@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
+import _ from 'lodash';
+
 import './App.css';
 import TetrisGrid from './TetrisGrid';
-import { moveBlock } from './../actions';
+import {moveBlock, rotateBlock} from './../actions';
 
 class App extends Component {
   constructor(props) {
@@ -12,24 +14,34 @@ class App extends Component {
       e.preventDefault();
       e.stopPropagation();
       const keyLegend = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
+        32: {type: 'rotate'},
+        37: {type: 'move', direction: 'left'},
+        38: {type: 'move', direction: 'up'},
+        39: {type: 'move', direction: 'right'},
+        40: {type: 'move', direction: 'down'},
       };
 
-      const direction = keyLegend[e.keyCode];
+      const action = keyLegend[e.keyCode];
 
-      this.props.dispatch(moveBlock(this.props.blocks, this.props.currentBlock, direction));
+      if (_.isUndefined(action)) return false;
+
+      switch (action.type) {
+        case 'move':
+          this.props.dispatch(moveBlock(this.props.currentBlock, action.direction));
+          break;
+        case 'rotate':
+          this.props.dispatch(rotateBlock(this.props.currentBlock));
+          break;
+      }
+
     });
 
-    this.tick();
+    // this.tick();
   }
 
   tick() {
     setTimeout(() => {
-      console.log('move block down');
-      this.props.dispatch(moveBlock(this.props.blocks, this.props.currentBlock, 'down'));
+      this.props.dispatch(moveBlock(this.props.currentBlock, 'down'));
       this.tick();
     }, 1000);
   }
@@ -40,7 +52,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <TetrisGrid rows={rows} cols={cols} blocks={blocks} currentBlock={currentBlock} />
+        <TetrisGrid rows={rows} cols={cols} blocks={blocks} currentBlock={currentBlock}/>
       </div>
     );
   }
