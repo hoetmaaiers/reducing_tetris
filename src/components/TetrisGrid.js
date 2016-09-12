@@ -31,9 +31,8 @@ class TetrisGrid extends Component {
 
   isOccupied(row, col) {
     const {blocks} = this.props;
-    const blockCoords = _.flatten(blocks.map((block) => {
-      return getBlockCoords(block);
-    }));
+
+    const blockCoords = _.flatten(blocks.map(block => getBlockCoords(block)));
 
     return _.some(blockCoords, (coord) => {
       return coord.x === col && coord.y === row;
@@ -42,7 +41,7 @@ class TetrisGrid extends Component {
 
 
   isCurrent(row, col) {
-    const {blocks, currentBlock} = this.props;
+    const {currentBlock} = this.props;
     if (_.isEmpty(currentBlock)) return false;
 
     const blockCoords = getBlockCoords(currentBlock);

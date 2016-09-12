@@ -1,13 +1,14 @@
 import _ from 'lodash';
-import {areCollidingBlocks} from './../utils/block';
+import uuid from 'uuid';
 
 // action constants
-export const MOVE_BLOCK = 'MOVE_BLOCK';
 export const ROTATE_BLOCK = 'ROTATE_BLOCK';
 export const ADD_BLOCK = 'ADD_BLOCK';
+export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 
-export function moveBlock(currentBlockId, direction) {
-  return {type: MOVE_BLOCK, blockId: currentBlockId, direction};
+export function updateBlock(block) {
+  return {type: UPDATE_BLOCK, block};
+  // return {type: MOVE_BLOCK, blockId: currentBlockId, direction};
 }
 
 export function rotateBlock(blockId) {
@@ -23,7 +24,7 @@ export function addBlock() {
 function createBlock(type) {
   return {
     // TODO: use a uuid generator for the id property
-    id: Date.now(),
+    id: uuid.v1(),
     type,
     rotation: 0,
     x: 1,

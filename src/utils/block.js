@@ -48,21 +48,19 @@ export function isBlockColliding(blocks, movingBlock) {
   });
 }
 
-// export function rotateBlock(block) {
-//   const {pattern} = block;
-//   let newPattern = [];
-//
-//   pattern.forEach((row, i) => {
-//     row.forEach((rowItem, j) => {
-//       console.log('rowItem', rowItem);
-//       if (_.isEmpty(newPattern[j])) {
-//         newPattern[j] = [];
-//       }
-//       newPattern[j][i] = rowItem;
-//     })
-//   });
-//   console.log(newPattern);
-//   return Object.assign({}, block, {
-//     pattern: newPattern
-//   });
-// }
+export function moveBlockCoords(block, direction) {
+  switch (direction) {
+    case 'left':
+      return Object.assign({}, block, {x: block.x - 1});
+      break;
+    case 'right':
+      return Object.assign({}, block, {x: block.x + 1});
+      break;
+    case 'up':
+      return Object.assign({}, block, {y: block.y - 1});
+      break;
+    case 'down':
+      return Object.assign({}, block, {y: block.y + 1});
+      break;
+  }
+}

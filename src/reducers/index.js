@@ -5,7 +5,7 @@ import currentBlock from './current-block';
 
 
 const rootReducer = combineReducers({
-  rows: () => 20,
+  rows: () => 10,
   cols: () => 10,
   blocks,
   currentBlock,

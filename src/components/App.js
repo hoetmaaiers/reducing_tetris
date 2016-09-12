@@ -3,7 +3,10 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import TetrisGrid from './TetrisGrid';
-import {addBlock, moveBlock, rotateBlock} from './../actions';
+import {addBlock, updateBlock, rotateBlock} from './../actions';
+import {getBlockCoords, isBlockColliding, moveBlockCoords} from './../utils/block';
+import {isBlockOutsideCanvas} from './../utils/canvas';
+
 
 class App extends Component {
   constructor(props) {
@@ -12,6 +15,7 @@ class App extends Component {
     window.addEventListener('keyup', (e) => {
       e.preventDefault();
       e.stopPropagation();
+
       const keyLegend = {
         32: {type: 'rotate'},
         37: {type: 'move', direction: 'left'},
@@ -26,7 +30,7 @@ class App extends Component {
 
       switch (action.type) {
         case 'move':
-          this.props.dispatch(moveBlock(this.props.currentBlock, action.direction));
+          this.moveBlock(action.direction);
           break;
         case 'rotate':
           this.props.dispatch(rotateBlock(this.props.currentBlock));
@@ -39,9 +43,23 @@ class App extends Component {
     this.tick();
   }
 
+  moveBlock(direction) {
+    const movingBlock = _.find(this.props.blocks, {id: this.props.currentBlock});
+    const movedBlock = moveBlockCoords(movingBlock, direction);
+
+    const isColliding = isBlockColliding(this.props.blocks, movedBlock);
+    const isOutsideCanvas = isBlockOutsideCanvas(movedBlock, this.props.rows, this.props.cols);
+
+    if (isColliding || isOutsideCanvas) {
+      console.warn('COLLIDING COLLIDING COLLIDING COLLIDING COLLIDING COLLIDING');
+    } else {
+      this.props.dispatch(updateBlock(movedBlock));
+    }
+  }
+
   tick() {
     setTimeout(() => {
-      this.props.dispatch(moveBlock(this.props.currentBlock, 'down'));
+      this.moveBlock('down');
       this.tick();
     }, 1000);
   }
