@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import {fromJS} from 'immutable';
-import {ROTATE_BLOCK, ADD_BLOCK, UPDATE_BLOCK} from './../actions';
-import {rotateBlock} from './../utils/block';
+import {ADD_BLOCK, UPDATE_BLOCK} from './../actions';
 
 const initialState = [];
 
@@ -10,7 +9,7 @@ export default function blocks(mutableState = initialState, action = {}) {
 
   switch (action.type) {
     case ADD_BLOCK:
-      return _.concat([], state.toJS(), action.block);
+      return state.concat(action.block).toJS();
 
     case UPDATE_BLOCK:
       return state.map((block) => {
@@ -19,18 +18,6 @@ export default function blocks(mutableState = initialState, action = {}) {
         } else {
           return block;
         }
-      }).toJS();
-
-    case ROTATE_BLOCK:
-      const rotatingBlock = state.find((block) => block.get('id') === action.blockId);
-      const rotatedBlock = rotateBlock(rotatingBlock.toJS());
-
-      return state.map((block) => {
-          if (block.get('id') === rotatedBlock.id) {
-            return rotatedBlock;
-          } else {
-            return block;
-          }
       }).toJS();
 
     default:

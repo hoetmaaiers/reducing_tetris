@@ -61,7 +61,6 @@ export function moveBlockCoords(block, direction) {
   }
 }
 
-
 export function rotateBlock(block) {
   const rotationLoops = blockDefinitions[block.type].length;
   const nextRotation = (block.rotation + 1 >= rotationLoops) ? 0 : block.rotation + 1;

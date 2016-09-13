@@ -2,16 +2,11 @@ import _ from 'lodash';
 import uuid from 'uuid';
 
 // action constants
-export const ROTATE_BLOCK = 'ROTATE_BLOCK';
 export const ADD_BLOCK = 'ADD_BLOCK';
 export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 
 export function updateBlock(block) {
   return {type: UPDATE_BLOCK, block};
-}
-
-export function rotateBlock(blockId) {
-  return {type: ROTATE_BLOCK, blockId: blockId};
 }
 
 export function addBlock() {
@@ -29,3 +24,4 @@ function createBlock(type) {
     y: 1,
   }
 }
+

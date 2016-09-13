@@ -2,14 +2,21 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 
-import {isBlockColliding, moveBlockCoords} from './../utils/block';
+import {isBlockColliding, moveBlockCoords, rotateBlock} from './../utils/block';
 import {isBlockOutsideCanvas} from './../utils/canvas';
-import {addBlock, updateBlock, rotateBlock} from './../actions';
+import {addBlock, updateBlock} from './../actions';
 
 class Gamer extends Component {
   constructor(props) {
     super(props);
+    
+    this.props.dispatch(addBlock());
+    this.tick();
+    
+    this.handleKeyEvents();
+  }
 
+  handleKeyEvents() {
     window.addEventListener('keyup', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -22,8 +29,8 @@ class Gamer extends Component {
         40: {type: 'move', direction: 'down'},
       };
 
-      const action = keyLegend[e.keyCode];
-
+      const action = keyLegend[e.keyCode] || {};
+      console.log('action', action);
       if (_.isUndefined(action)) return false;
 
       switch (action.type) {
@@ -31,7 +38,7 @@ class Gamer extends Component {
           this.moveBlock(action.direction);
           break;
         case 'rotate':
-          this.props.dispatch(rotateBlock(this.props.currentBlock));
+          this.rotateBlock();
           break;
         default:
         // unknown key / action
@@ -39,10 +46,8 @@ class Gamer extends Component {
 
     });
 
-    this.props.dispatch(addBlock());
-    this.tick();
   }
-
+  
   moveBlock(direction) {
     const movingBlock = _.find(this.props.blocks, {id: this.props.currentBlock});
     const movedBlock = moveBlockCoords(movingBlock, direction);
@@ -55,6 +60,12 @@ class Gamer extends Component {
     } else {
       this.props.dispatch(updateBlock(movedBlock));
     }
+  }
+  
+  rotateBlock() {
+    const rotatingBlock = _.find(this.props.blocks, { id: this.props.currentBlock });
+    const rotatedBlock = rotateBlock(rotatingBlock);
+    this.props.dispatch(updateBlock(rotatedBlock));
   }
 
   tick() {

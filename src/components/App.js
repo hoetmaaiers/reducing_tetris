@@ -7,13 +7,8 @@ import TetrisGrid from './TetrisGrid';
 
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
   render() {
-    const {rows, cols, blocks} = this.props;
-    const currentBlock = _.find(blocks, {id: this.props.currentBlock})
+    const {rows, cols, blocks, currentBlock} = this.props;
 
     return (
       <Gamer>
@@ -29,7 +24,9 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-  return state;
+  return Object.assign({}, state, {
+    currentBlock: _.find(state.blocks, {id: state.currentBlock}),
+  })
 }
 
 export default connect(mapStateToProps)(App);
