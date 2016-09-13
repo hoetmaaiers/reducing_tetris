@@ -8,7 +8,6 @@ export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 
 export function updateBlock(block) {
   return {type: UPDATE_BLOCK, block};
-  // return {type: MOVE_BLOCK, blockId: currentBlockId, direction};
 }
 
 export function rotateBlock(blockId) {
@@ -23,7 +22,6 @@ export function addBlock() {
 
 function createBlock(type) {
   return {
-    // TODO: use a uuid generator for the id property
     id: uuid.v1(),
     type,
     rotation: 0,

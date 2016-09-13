@@ -24,7 +24,7 @@ const TetrisCell = (props) => {
   }, props);
 
   return (
-    <div style={styles.cell} />
+    <div style={styles.cell}/>
   );
 };
 

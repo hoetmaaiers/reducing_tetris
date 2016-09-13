@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import {fromJS} from 'immutable';
-import blockDefinitions from './../constants/blocks';
 import {ROTATE_BLOCK, ADD_BLOCK, UPDATE_BLOCK} from './../actions';
+import {rotateBlock} from './../utils/block';
 
-const initialState = [
-]
+const initialState = [];
 
 export default function blocks(mutableState = initialState, action = {}) {
   const state = fromJS(mutableState);
@@ -24,10 +23,10 @@ export default function blocks(mutableState = initialState, action = {}) {
 
     case ROTATE_BLOCK:
       const rotatingBlock = state.find((block) => block.get('id') === action.blockId);
-      const rotatedBlock = rotateBlock(rotatingBlock);
+      const rotatedBlock = rotateBlock(rotatingBlock.toJS());
 
       return state.map((block) => {
-          if (block.get('id') === rotatedBlock.get('id')) {
+          if (block.get('id') === rotatedBlock.id) {
             return rotatedBlock;
           } else {
             return block;
@@ -37,10 +36,4 @@ export default function blocks(mutableState = initialState, action = {}) {
     default:
       return state.toJS();
   }
-}
-
-function rotateBlock(block) {
-  const rotationLoops = blockDefinitions[block.get('type')].length;
-  const nextRotation = (block.get('rotation') + 1 >= rotationLoops) ? 0 : block.get('rotation') + 1;
-  return block.set('rotation', nextRotation);
 }

@@ -17,7 +17,7 @@ const sx = reactCSS({
       float: 'left',
       clear: 'both',
     },
-    col: {
+    cell: {
       width: '25px',
       height: '25px',
       backgroundColor: 'white',
@@ -64,7 +64,7 @@ class TetrisGrid extends Component {
 
               {_.times(cols, (col) => {
                 return (
-                  <div key={col} style={sx.col}>
+                  <div key={col} style={sx.cell}>
                     <TetrisCell occupied={this.isOccupied(row, col)} current={this.isCurrent(row, col)}/>
                   </div>
                 );

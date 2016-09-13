@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import TetrisGrid from './TetrisGrid';
 import {addBlock, updateBlock, rotateBlock} from './../actions';
-import {getBlockCoords, isBlockColliding, moveBlockCoords} from './../utils/block';
+import {isBlockColliding, moveBlockCoords} from './../utils/block';
 import {isBlockOutsideCanvas} from './../utils/canvas';
 
 
@@ -35,6 +35,8 @@ class App extends Component {
         case 'rotate':
           this.props.dispatch(rotateBlock(this.props.currentBlock));
           break;
+        default:
+          // unknown key / action
       }
 
     });
@@ -69,9 +71,12 @@ class App extends Component {
     const currentBlock = _.find(blocks, {id: this.props.currentBlock})
 
     return (
-      <div className="App">
-        <TetrisGrid rows={rows} cols={cols} blocks={blocks} currentBlock={currentBlock}/>
-      </div>
+      <TetrisGrid
+        rows={rows}
+        cols={cols}
+        blocks={blocks}
+        currentBlock={currentBlock}
+      />
     );
   }
 }

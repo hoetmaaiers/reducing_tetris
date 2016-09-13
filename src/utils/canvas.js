@@ -3,28 +3,17 @@ import _ from 'lodash';
 import {getBlockCoords} from './block';
 
 export function getCanvasOuterCoords(rows, cols) {
-  // top
-  const topCoords = _.times(cols, (i) => {
-    return {x: i, y: -1};
-  });
 
-  // bottom
-  const bottomCoords = _.times(cols, (i) => {
-      return {x: i, y: rows};
-  });
-
-  // left
-  const leftCoords = _.times(rows, (i) => {
-      return {x: -1, y: i};
-  });
-  
-  // right
-  const rightCoords = _.times(rows, (i) => {
-      return {x: cols, y: i};
-  });
-
-
-  return _.concat([], topCoords, bottomCoords, leftCoords, rightCoords);
+  return _.concat([],
+    // top
+    _.times(cols, i => ({x: i, y: -1})),
+    // bottom
+    _.times(cols, i => ({x: i, y: rows})),
+    // left
+    _.times(rows, i => ({x: -1, y: i})),
+    // right
+    _.times(rows, i => ({x: cols, y: i})),
+  );
 }
 
 export function isBlockOutsideCanvas(block, rows, cols) {
