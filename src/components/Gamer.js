@@ -3,17 +3,26 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import {isBlockColliding, moveBlockCoords, rotateBlock} from './../utils/block';
-import {isBlockOutsideCanvas} from './../utils/canvas';
+import {isBlockOutsideCanvas, isBlockOutsideBottomCanvas} from './../utils/canvas';
 import {addBlock, updateBlock} from './../actions';
 
 class Gamer extends Component {
   constructor(props) {
     super(props);
-    
+
     this.props.dispatch(addBlock());
     this.tick();
-    
+
     this.handleKeyEvents();
+  }
+
+  tick() {
+    const {blocks} = this.props;
+
+    setTimeout(() => {
+      this.moveBlock('down');
+      this.tick();
+    }, 1000);
   }
 
   handleKeyEvents() {
@@ -30,8 +39,6 @@ class Gamer extends Component {
       };
 
       const action = keyLegend[e.keyCode] || {};
-      console.log('action', action);
-      if (_.isUndefined(action)) return false;
 
       switch (action.type) {
         case 'move':
@@ -41,7 +48,7 @@ class Gamer extends Component {
           this.rotateBlock();
           break;
         default:
-        // unknown key / action
+          // unknown key / action
       }
 
     });
@@ -49,36 +56,40 @@ class Gamer extends Component {
   }
   
   moveBlock(direction) {
-    const movingBlock = _.find(this.props.blocks, {id: this.props.currentBlock});
+    const {blocks, rows, cols, dispatch} = this.props
+    const movingBlock = this.getCurrentBlock();
     const movedBlock = moveBlockCoords(movingBlock, direction);
 
-    const isColliding = isBlockColliding(this.props.blocks, movedBlock);
-    const isOutsideCanvas = isBlockOutsideCanvas(movedBlock, this.props.rows, this.props.cols);
+    const isCollidingOtherBlocks = isBlockColliding(blocks, movedBlock);
+    const isOutsideCanvas = isBlockOutsideCanvas(movedBlock, rows, cols);
+    const isOutsideBottomCanvas = isBlockOutsideBottomCanvas(movedBlock, rows, cols);
+    const isCollidingNextStep = (isCollidingOtherBlocks || isOutsideBottomCanvas);
 
-    if (isColliding || isOutsideCanvas) {
-      console.warn('COLLIDING COLLIDING COLLIDING COLLIDING COLLIDING COLLIDING');
+    if (isCollidingNextStep && (direction === 'down')) {
+      dispatch(addBlock());
+    } else if (isCollidingNextStep && (direction !== 'down')) {
+      // block can't go to next step, do nothing
+    } else if (isOutsideCanvas) {
+      //  block can't go outside the canvas
     } else {
-      this.props.dispatch(updateBlock(movedBlock));
+      dispatch(updateBlock(movedBlock));
     }
   }
   
   rotateBlock() {
-    const rotatingBlock = _.find(this.props.blocks, { id: this.props.currentBlock });
+    const rotatingBlock = this.getCurrentBlock();
     const rotatedBlock = rotateBlock(rotatingBlock);
     this.props.dispatch(updateBlock(rotatedBlock));
-  }
-
-  tick() {
-    setTimeout(() => {
-      this.moveBlock('down');
-      this.tick();
-    }, 1000);
   }
 
   render() {
     return (
       <div>{this.props.children}</div>
     )
+  }
+
+  getCurrentBlock() {
+    return _.find(this.props.blocks, {id: this.props.currentBlock});
   }
 }
 
