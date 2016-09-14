@@ -48,13 +48,13 @@ class Gamer extends Component {
           this.rotateBlock();
           break;
         default:
-          // unknown key / action
+        // unknown key / action
       }
 
     });
 
   }
-  
+
   moveBlock(direction) {
     const {blocks, rows, cols, dispatch} = this.props
     const movingBlock = this.getCurrentBlock();
@@ -75,11 +75,22 @@ class Gamer extends Component {
       dispatch(updateBlock(movedBlock));
     }
   }
-  
+
   rotateBlock() {
+    const {blocks, rows, cols, dispatch} = this.props
+
     const rotatingBlock = this.getCurrentBlock();
     const rotatedBlock = rotateBlock(rotatingBlock);
-    this.props.dispatch(updateBlock(rotatedBlock));
+
+    const isCollidingOtherBlocks = isBlockColliding(blocks, rotatedBlock);
+    const isOutsideCanvas = isBlockOutsideCanvas(rotatedBlock, rows, cols);
+    const isCollidingNextStep = (isCollidingOtherBlocks || isOutsideCanvas);
+
+    if (isCollidingNextStep) {
+      console.log('sorry, can\'t rotate, try to move?');
+    } else {
+      dispatch(updateBlock(rotatedBlock));
+    }
   }
 
   render() {
